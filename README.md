@@ -48,4 +48,4 @@ You can read mor about native disk-cache [here](http://petersteinberger.com/blog
 
 
 ##My other usefull libs
-[Foursqaure2](https://github.com/Constantine-Fry/Foursquare-API-v2)
+[Foursqaure2](https://github.com/Constantine-Fry/Foursquare-API-v2) - Foursquare API v2 For iOS and MacOS.
