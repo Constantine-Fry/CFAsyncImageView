@@ -5,13 +5,13 @@ CFAsyncImageView is simple subclass of UIImageView with internal image loader. I
 
 ##Interface
 
-        -(void)loadImageWithName:(NSString*)image;
-        -(void)loadImageFromURL:(NSString*)url;
-        -(void)loadImageFromURL:(NSString*)url withPlaceholder:(UIImage*)image;
-        -(void)loadImageFromURL:(NSString*)url withTarger:(id)target selector:(SEL)selector;
+    -(void)loadImageWithName:(NSString*)image;
+    -(void)loadImageFromURL:(NSString*)url;
+    -(void)loadImageFromURL:(NSString*)url withPlaceholder:(UIImage*)image;
+    -(void)loadImageFromURL:(NSString*)url withTarger:(id)target selector:(SEL)selector;
 
-        -(void)addImage:(UIImage*)image;
-        -(void)addImageToImageView:(UIImage *)image animated:(BOOL)animated;
+    -(void)addImage:(UIImage*)image;
+    -(void)addImageToImageView:(UIImage *)image animated:(BOOL)animated;
 
 ##How to use it?
 
