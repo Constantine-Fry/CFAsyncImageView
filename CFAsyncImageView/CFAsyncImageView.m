@@ -9,6 +9,7 @@ typedef void (^ImageHandler)(UIImage *image);
 @property (nonatomic) NSUInteger maxImageSize;
 @property (nonatomic) CGSize maxSize;
 
+-(UIImage*)imageForURL:(NSString*)url;
 -(void)loadImageWithUrl:(NSString*)url
                 handler:(ImageHandler)handler;
 -(void)cancel;
@@ -34,6 +35,8 @@ static NSCache* _cache;
 +(void)applicationDidReceiveMemoryWarning{
     [_cache removeAllObjects];
 }
+
+
 
 - (void)initAsyncView {
     self.backgroundColor = [UIColor clearColor];
@@ -79,7 +82,7 @@ static NSCache* _cache;
     if (animated) {
         imageView.alpha = 0; 
         [UIView beginAnimations:@"" context:nil];
-        [UIView setAnimationDuration:0.3];
+        [UIView setAnimationDuration:0.1];
         imageView.alpha = 1;
         [UIView commitAnimations];
     }
@@ -131,6 +134,8 @@ static NSCache* _cache;
     [self loadImageFromURL:url withTarger:nil selector:nil];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 -(void)loadImageFromURL:(NSString*)url withTarger:(id)tar selector:(SEL)sel {
 	_target = tar;
     selector = sel;
@@ -141,14 +146,20 @@ static NSCache* _cache;
         loader = [[CFImageLoader alloc]init];
     }
     
-    CFAbsoluteTime time = CFAbsoluteTimeGetCurrent();
+    UIImage *image = [loader imageForURL:url];
+    if (image) {
+        [self addImageToImageView:image animated:NO];
+        [_target performSelector:selector withObject:image];
+        return;
+    }
+    
     [loader loadImageWithUrl:url handler:^(UIImage *image) {
-        
-        BOOL animated = (CFAbsoluteTimeGetCurrent() - time) > 0.4;
-        [self addImageToImageView:image animated:animated];
+        [self  addImageToImageView:image animated:YES];
         [_target performSelector:selector withObject:image];
     }];
 }
+
+#pragma clang diagnostic pop
 @end
 
 
@@ -173,6 +184,10 @@ static NSCache* _cache;
     NSString *__weak _urlString;
     NSCache *_imageCache;
     ImageHandler _handler;
+}
+
+-(UIImage*)imageForURL:(NSString*)url{
+    return [_imageCache objectForKey:_urlString];
 }
 
 - (id)init
